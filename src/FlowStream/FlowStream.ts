@@ -198,17 +198,11 @@ export class FlowStream extends SketchTemplate {
         fillColor.add(this.settings, 'fillOpacity', 0, .5, .01).listen().onChange(this.onChangeFill)
     }
 
-
-    mousePressed(): void {
-        // this.addBlobs()
-    }
-
     keyPressed(...args: any) {
         const k: KeyboardEvent = args[0][0];
         if (k.code === 'ArrowRight') this.settings.maxBlobs += 10;
         if (k.code === 'ArrowLeft') this.settings.maxBlobs -= 10;
     }
-
 
     rk4(stepsize: number, position: p5.Vector, dir: number) {
         const x = position.x;
@@ -232,8 +226,6 @@ export class FlowStream extends SketchTemplate {
         )
     }
 
-    // https://lpsa.swarthmore.edu/NumInt/NumIntSecond.html
-
     rk2(stepsize: number, position: p5.Vector, dir: number) {
         const x = position.x;
         const y = position.y;
@@ -250,7 +242,7 @@ export class FlowStream extends SketchTemplate {
         )
     }
 
-    draw(): void {
+    draw() {
 
         this.p.noStroke();
         this.p.fill(this.fill);
@@ -318,7 +310,4 @@ export class FlowStream extends SketchTemplate {
     }
 
 
-    tick(): void {
-        this.draw()
-    }
 }

@@ -7,3 +7,5 @@
 // https://www.dynamicmath.xyz/complex/flowaroundcircle/flowaroundcircle.html
 
 // based on ===> https://github.com/jcponce/calculus/blob/gh-pages/diff-equations/sketch.js
+
+// runge kutta => // https://lpsa.swarthmore.edu/NumInt/NumIntSecond.html

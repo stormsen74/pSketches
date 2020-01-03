@@ -5,7 +5,7 @@ import { FlowStream } from './FlowStream/FlowStream';
 
 let sketchRef: any;
 const getSketch = (p: p5) => {
-    return new FlowStream(p)
+    return new ParticleSetup(p)
 };
 
 const sketch = (p: p5): void => {
@@ -25,9 +25,7 @@ const sketch = (p: p5): void => {
         // p.resizeCanvas(p.windowWidth, p.windowHeight);
     };
 
-    p.draw = (): void => {
-        sketch.tick();
-    };
+    p.draw = (): void => { sketch.tick() };
 };
 
 const s = new p5(sketch);

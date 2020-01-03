@@ -20,7 +20,7 @@ export class ParticleSetup extends SketchTemplate {
         this.particles.push(p)
     }
 
-    public tick(): void {
+    draw() {
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];

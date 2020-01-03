@@ -1,0 +1,9 @@
+// https://codepen.io/DonKarlssonSan/post/particles-in-simplex-noise-flow-field
+
+// https://thecodingtrain.com/CodingChallenges/132-fluid-simulation.html
+
+// https://github.com/stormsen74/node_sketches/blob/master/source/Sketch_11.js
+
+// https://www.dynamicmath.xyz/complex/flowaroundcircle/flowaroundcircle.html
+
+// based on ===> https://github.com/jcponce/calculus/blob/gh-pages/diff-equations/sketch.js

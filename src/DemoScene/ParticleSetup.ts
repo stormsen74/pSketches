@@ -1,0 +1,35 @@
+import p5 from 'p5';
+import { Particle } from './Particle'
+import { SketchTemplate } from '../Common/SketchTemplate'
+
+export class ParticleSetup extends SketchTemplate {
+    particles: Particle[];
+
+    constructor(p: p5) {
+        super(p);
+
+        this.particles = [];
+    }
+
+    mousePressed(): void {
+        this.addParticle(this.p.createVector(this.p.mouseX, this.p.mouseY))
+    }
+
+    private addParticle(position: p5.Vector) {
+        const p = new Particle(this.p, position);
+        this.particles.push(p)
+    }
+
+    public tick(): void {
+
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            p.run();
+            if (p.isDead()) {
+                this.particles.splice(i, 1);
+            }
+        }
+    }
+
+
+}

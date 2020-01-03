@@ -1,5 +1,5 @@
 {
-  "name": "p5-typescript-starter",
+  "name": "p-sketches",
   "version": "1.0.0",
   "description": "A bare-bones boilerplate for p5.js with TypeScript & Parcel",
   "main": "index.html",
@@ -9,16 +9,15 @@
   },
   "keywords": [
     "p5js",
-    "boilerplate",
     "typescript",
     "parcel-bundler"
   ],
-  "homepage": "https://github.com/arcdelta/p5-typescript-starter",
+  "homepage": "*",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arcdelta/p5-typescript-starter.git"
+    "url": "https://github.com/stormsen74/pSketches.git"
   },
-  "author": "Vladislav Mon <arcdeltax@gmail.com>",
+  "author": "*",
   "license": "MIT",
   "dependencies": {
     "p5": "^0.7.2"

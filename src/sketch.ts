@@ -10,6 +10,7 @@ export const sketch = (p: p5) => {
 
   p.draw = () => {
     // Define render logic for your sketch here
+    p.circle(0, 0, 50)
   }
 
   p.keyPressed = () => {

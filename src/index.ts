@@ -1,12 +1,34 @@
-import p5 from 'p5'
+import p5 from 'p5';
 import { ParticleSetup } from './DemoScene/ParticleSetup';
 import { FlowStream } from './FlowStream/FlowStream';
 
+interface SketchType {
+    [key: string]: Array<any>;
+}
 
-let sketchRef: any;
+enum types {
+    'ParticleSetup' = 'ParticleSetup',
+    'FlowStream' = 'FlowStream'
+}
+
+const sketchTypes: SketchType = {
+    'ParticleSetup': [
+        (p: p5): ParticleSetup => { return new ParticleSetup(p) }
+    ],
+    'FlowStream': [
+        (p: p5): FlowStream => { return new FlowStream(p) }
+    ]
+}
+
+
+let sk: p5
+let sketchType: string
+let sketchRef: any
+
 const getSketch = (p: p5) => {
-    return new ParticleSetup(p)
+    return sketchTypes[sketchType][0](p);
 };
+
 
 const sketch = (p: p5): void => {
     let sketch: any;
@@ -21,6 +43,7 @@ const sketch = (p: p5): void => {
         sketchRef = sketch;
     };
 
+    // @todo
     p.windowResized = (): void => {
         // p.resizeCanvas(p.windowWidth, p.windowHeight);
     };
@@ -28,10 +51,20 @@ const sketch = (p: p5): void => {
     p.draw = (): void => { sketch.tick() };
 };
 
-const s = new p5(sketch);
 
-  // setTimeout(() => {
-  //   sketchRef.destroy();
-  //   s.remove();
-  // }, 5000)
+
+const createSketch = (type: string) => {
+    sketchType = type
+    sk = new p5(sketch)
+}
+
+const clearSketch = () => {
+    sketchRef.destroy();
+    sk.remove();
+
+}
+
+createSketch(types.FlowStream);
+
+// setTimeout(() => { clearSketch() }, 5000)
 

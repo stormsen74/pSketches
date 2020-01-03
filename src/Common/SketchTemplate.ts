@@ -17,6 +17,8 @@ export class SketchTemplate {
     mousePressed(e: Event): void { }
     keyPressed(args: any): void { }
 
+    destroy(): void { }
+
     tick(): void {
         this.update()
         this.draw()

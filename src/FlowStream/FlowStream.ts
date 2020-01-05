@@ -15,7 +15,6 @@ export class FlowStream extends SketchTemplate {
         trace: boolean,
         plotField: boolean,
         plotRes: number,
-        run: boolean,
         speedMultiplier: number,
         fScale: number,
         useRK4: boolean,
@@ -44,7 +43,6 @@ export class FlowStream extends SketchTemplate {
 
         this.settings = {
             maxBlobs: 150,
-            run: true,
             fScale: 20,
             speedMultiplier: .0002,
             useRK4: true,
@@ -147,7 +145,8 @@ export class FlowStream extends SketchTemplate {
 
 
     initGUI(): void {
-        this.gui = new dat.GUI({ width: 350, closed: false });
+
+        this.gui = new dat.GUI({ width: 350, closed: true });
 
         this.gui.add(this.settings, 'trace').onChange((trace: boolean) => {
             this.settings.fillOpacity = trace ? .03 : .5;
@@ -177,9 +176,6 @@ export class FlowStream extends SketchTemplate {
         simulation.add(this.settings, 'useRK4')
         simulation.add(this.settings, 'blobCount').listen();
         simulation.add(this.settings, 'frameRate', 0, 1, 0.01).listen().name('60fps');
-        simulation.add(this.settings, 'run').onChange((run: boolean) => {
-            run ? this.p.loop() : this.p.noLoop()
-        })
 
         this.gui.add(this.settings, 'n', ["positive", "negative", "pos/neg"]).name("direction")
         this.gui.add(this.settings, 'ode', this.equations.getTypes()).name("Select:")
@@ -307,6 +303,10 @@ export class FlowStream extends SketchTemplate {
                 this.p.pop();
             }
         }
+    }
+
+    destroy() {
+        this.gui.destroy()
     }
 
 

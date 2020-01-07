@@ -6,7 +6,6 @@
     "scripts": {
         "start": "parcel index.html",
         "build": "parcel build index.html --public-url ./"
-       
     },
     "keywords": [
         "p5js",
@@ -22,7 +21,8 @@
     "license": "MIT",
     "dependencies": {
         "p5": "^0.9.0",
-        "bezier-easing": "^2.1.0"
+        "bezier-easing": "^2.1.0",
+        "simplex-noise": "^2.4.0"
     },
     "devDependencies": {
         "@types/p5": "^0.9.0",

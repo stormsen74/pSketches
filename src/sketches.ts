@@ -9,12 +9,12 @@ export interface sketchData {
 export const sketches: Array<sketchData> = [
     {
         key: 'ParticleSetup',
-        name: 'ParticleSetup',
+        name: 'Particle Setup',
         description: ' ...'
     },
     {
         key: 'FlowStream',
-        name: 'FlowStream',
+        name: 'Flow-Stream',
         description: ' ...'
     },
     {
@@ -25,6 +25,11 @@ export const sketches: Array<sketchData> = [
     {
         key: 'PotentialFieldSketch',
         name: 'Potential Field',
+        description: ' ...'
+    },
+    {
+        key: 'CurlNoiseFieldSketch',
+        name: 'Curl-Noise Field',
         description: ' ...'
     }
 ]

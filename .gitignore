@@ -23,3 +23,5 @@ typings/
 # Parcel directories
 .cache/
 dist/
+/.vscode
+/package-lock.json

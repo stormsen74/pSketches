@@ -1,4 +1,4 @@
-import p5 from 'p5';
+import p5, { Vector } from 'p5';
 import * as dat from 'dat.gui';
 import { Point } from '../Common/Point';
 import { BlobParticle } from '../Common/Blob';
@@ -13,12 +13,15 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
     colors: p5.Color[]
     gui: dat.GUI
     simplex: SimplexNoise
+    t: number
 
     settings: {
         trace: boolean
         plotField: boolean
         nBlobs: number
+        useCurl: boolean
         noiseScale: number
+        animateNoise: boolean
         noiseZ: number
         useSimplex: boolean
         epsilon: number
@@ -32,7 +35,9 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
             trace: true,
             plotField: false,
             nBlobs: 100,
+            useCurl: false,
             noiseScale: 0.0015,
+            animateNoise: false,
             noiseZ: 0.1,
             useSimplex: false,
             epsilon: .0001,
@@ -45,6 +50,8 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
         this.screenSize = new Point(this.p.windowWidth, this.p.windowHeight)
 
         this.simplex = new SimplexNoise(Math.random)
+
+        this.t = 0
 
         this.blobs = new Array<BlobParticle>();
         for (let index = 0; index < this.settings.nBlobs; index++) {
@@ -59,8 +66,10 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
         this.gui = new dat.GUI({ width: 350, closed: true });
         this.gui.add(this.settings, 'nBlobs', 1, 500, 1).listen()
         this.gui.add(this.settings, 'strength', 0, 5, .1)
-        this.gui.add(this.settings, 'noiseScale', 0, .01, .0001)
-        this.gui.add(this.settings, 'noiseZ', 0, 1, .01)
+        this.gui.add(this.settings, 'noiseScale', 0, .005, .0001)
+        this.gui.add(this.settings, 'animateNoise').listen()
+        this.gui.add(this.settings, 'useCurl').listen()
+        this.gui.add(this.settings, 'noiseZ', 0, 1, .01).listen()
         this.gui.add(this.settings, 'useSimplex').listen()
         this.gui.add(this.settings, 'plotField').listen()
         this.gui.add(this.settings, 'trace').listen()
@@ -88,9 +97,8 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
 
 
     private getNoise(x: number, y: number) {
-        // return this.p.noise(x, y, this.settings.noiseZ);
-        // return this.simplex.noise3D(x, y, this.settings.noiseZ);
-        return this.settings.useSimplex ? this.simplex.noise3D(x, y, this.settings.noiseZ) : this.p.noise(x, y, this.settings.noiseZ);
+        const t = this.settings.animateNoise ? this.t : this.settings.noiseZ
+        return this.settings.useSimplex ? this.simplex.noise3D(x, y, t) : this.p.noise(x, y, t);
     }
 
 
@@ -106,25 +114,36 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
 
         vCurl.mult(this.settings.strength / this.settings.epsilon)
 
+        if (this.settings.useSimplex) vCurl.mult(.25) 
+
         return vCurl;
     };
 
+    private getVel(position: p5.Vector) {
+        const noise = this.getNoise(position.x, position.y)
+        const angle = noise * this.p.TWO_PI
+        let vResult = this.p.createVector()
+        const m = this.settings.useSimplex ? 4 : 2
+        vResult = Vector.fromAngle(angle, noise * m);
+        return vResult
+    }
+
     draw() {
+
+        this.t += .003;
 
         this.p.noStroke();
         this.p.fill(10, this.settings.trace ? 10 : 255);
         this.p.rect(0, 0, this.screenSize.x, this.screenSize.y);
 
-        for (var i = this.blobs.length - 1; i >= 0; i--) {
+        for (let i = 0; i < this.blobs.length; ++i) {
             const blob = this.blobs[i];
 
             const position = blob.position.copy().mult(this.settings.noiseScale);
-            const vResult = this.curlField(position);
-            if (this.settings.useSimplex) vResult.mult(.25)
+            const vResult = this.settings.useCurl ? this.curlField(position) : this.getVel(position);
 
             blob.velocity.set(vResult.x, vResult.y)
             blob.update();
-
 
             this.p.stroke(blob.color);
             this.p.strokeWeight(blob.size)
@@ -137,14 +156,15 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
                 this.blobs.splice(i, 1);
                 this.addBlob();
             }
+
             // if (blob.isDead()) this.respawn(blob);
+
+            if (this.blobs.length > this.settings.nBlobs) {
+                this.blobs.splice(i, 1)
+            }
         }
 
-        if (this.blobs.length < this.settings.nBlobs) {
-            this.addBlob()
-        } else {
-            // this.blobs.splice(0, 1)
-        }
+        if (this.blobs.length < this.settings.nBlobs) this.addBlob()
 
         if (this.settings.plotField) this.plotField();
     }
@@ -155,8 +175,8 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
             for (let j = 0; j <= this.screenSize.y; j += res) {
                 const position = this.p.createVector(k, j)
                 const pScaled = position.copy().mult(this.settings.noiseScale);
-                const vResult = this.curlField(pScaled);
-                if (this.settings.useSimplex) vResult.mult(.25)
+                const vResult = this.curlField ? this.curlField(pScaled) : this.getVel(pScaled);
+                
                 let angle = vResult.heading();
                 let mag = vResult.mag();
                 this.p.fill(255, mag * 255);

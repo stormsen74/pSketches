@@ -15,7 +15,6 @@ export class PotentialFieldSketch extends SketchTemplate {
     gui: dat.GUI
 
     settings: {
-        run: boolean
         trace: boolean
         plotField: boolean
         nBlobs: number
@@ -28,7 +27,6 @@ export class PotentialFieldSketch extends SketchTemplate {
         super(p)
 
         this.settings = {
-            run: true,
             trace: true,
             plotField: false,
             nBlobs: 100,
@@ -60,15 +58,11 @@ export class PotentialFieldSketch extends SketchTemplate {
 
     initGUI(): void {
         this.gui = new dat.GUI({ width: 350, closed: true });
-        this.gui.add(this.settings, 'run').onChange((run: boolean) => {
-            run ? this.p.loop() : this.p.noLoop()
-        })
         this.gui.add(this.settings, 'nBlobs', 1, 500, 1).listen()
         this.gui.add(this.settings, 'curl').listen()
         this.gui.add(this.settings, 'strength', 1, 1000, 1)
         this.gui.add(this.settings, 'plotField').listen()
         this.gui.add(this.settings, 'trace').listen()
-
     }
 
 

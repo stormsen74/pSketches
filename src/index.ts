@@ -159,4 +159,4 @@ const initUI = () => {
 
 }
 
-showUI ? initUI() : createSketch(types.PotentialFieldSketch);
+showUI ? initUI() : createSketch(types.CurlNoiseFieldSketch);

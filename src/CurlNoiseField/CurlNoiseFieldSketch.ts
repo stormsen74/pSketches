@@ -18,6 +18,7 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
     settings: {
         trace: boolean
         plotField: boolean
+        drawNoise: boolean
         nBlobs: number
         useCurl: boolean
         noiseScale: number
@@ -34,6 +35,7 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
         this.settings = {
             trace: true,
             plotField: false,
+            drawNoise: false,
             nBlobs: 100,
             useCurl: false,
             noiseScale: 0.0015,
@@ -72,6 +74,7 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
         this.gui.add(this.settings, 'noiseZ', 0, 1, .01).listen()
         this.gui.add(this.settings, 'useSimplex').listen()
         this.gui.add(this.settings, 'plotField').listen()
+        this.gui.add(this.settings, 'drawNoise').listen()
         this.gui.add(this.settings, 'trace').listen()
     }
 
@@ -98,6 +101,7 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
 
     private getNoise(x: number, y: number) {
         const t = this.settings.animateNoise ? this.t : this.settings.noiseZ
+        // simplex: -1 | 1 p5: 0 | 1
         return this.settings.useSimplex ? this.simplex.noise3D(x, y, t) : this.p.noise(x, y, t);
     }
 
@@ -114,7 +118,7 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
 
         vCurl.mult(this.settings.strength / this.settings.epsilon)
 
-        if (this.settings.useSimplex) vCurl.mult(.25) 
+        if (this.settings.useSimplex) vCurl.mult(.25)
 
         return vCurl;
     };
@@ -166,7 +170,9 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
 
         if (this.blobs.length < this.settings.nBlobs) this.addBlob()
 
-        if (this.settings.plotField) this.plotField();
+        if (this.settings.plotField) this.plotField()
+        if (this.settings.drawNoise) this.drawNoise()
+
     }
 
     private plotField(): void {
@@ -176,7 +182,7 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
                 const position = this.p.createVector(k, j)
                 const pScaled = position.copy().mult(this.settings.noiseScale);
                 const vResult = this.curlField ? this.curlField(pScaled) : this.getVel(pScaled);
-                
+
                 let angle = vResult.heading();
                 let mag = vResult.mag();
                 this.p.fill(255, mag * 255);
@@ -191,6 +197,53 @@ export class CurlNoiseFieldSketch extends SketchTemplate {
                 this.p.pop();
             }
         }
+    }
+
+    private drawNoise(): void {
+        const sampleSize = 20
+        const pixelSize = 5
+
+        const w = (this.screenSize.x / sampleSize * pixelSize) + pixelSize
+        const h = (this.screenSize.y / sampleSize * pixelSize) + pixelSize
+        const offsetX = this.screenSize.x - w
+        const offsetY = this.screenSize.y - h
+
+
+        this.p.push()
+        this.p.translate(offsetX - 1, offsetY - 1)
+        // this.p.colorMode(this.p.HSL, 1)
+
+        for (let k = 0; k <= this.screenSize.x; k += sampleSize) {
+            for (let j = 0; j <= this.screenSize.y; j += sampleSize) {
+                const position = this.p.createVector(k, j)
+                const pScaled = position.copy().mult(this.settings.noiseScale);
+                const noise = !this.settings.useSimplex ? this.getNoise(pScaled.x, pScaled.y) : this.p.map(this.getNoise(pScaled.x, pScaled.y), -1, 1, 0, 1)
+
+                const vResult = this.curlField ? this.curlField(pScaled) : this.getVel(pScaled)
+                const mag = vResult.mag() * .5
+                // let angle = vResult.heading();
+                const lum = this.p.map(mag, 0, 1, 0, .5)
+                const mappedHue = this.p.map(noise, 0, 1, 0, .5)
+                const colorVelocity = this.p.color(mappedHue, .5, lum, 1)
+
+
+
+                const colorNoise = this.p.color(noise * 255, noise * 255, noise * 255, 200)
+
+                //draw
+                this.p.noStroke()
+                this.p.fill(colorNoise)
+                this.p.rect(k / sampleSize * pixelSize, j / sampleSize * pixelSize, pixelSize, pixelSize)
+
+            }
+        }
+
+        this.p.stroke(this.p.color(255, 0, 0, 255))
+        this.p.strokeWeight(1)
+        this.p.noFill()
+        this.p.rect(0, 0, w, h)
+
+        this.p.pop();
     }
 
     destroy() {

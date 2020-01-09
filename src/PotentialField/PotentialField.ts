@@ -1,12 +1,11 @@
 import * as p5 from 'p5';
 import BezierEasing from '../../node_modules/bezier-easing/src/index';
-import { Point } from '../Common/Point';
 
 export class Potential {
     radius: number
     charge: number
     position: p5.Vector
-
+ 
     constructor(position: p5.Vector, radius: number, a: number) {
         this.position = position;
         this.radius = radius;

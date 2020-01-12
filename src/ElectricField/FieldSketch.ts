@@ -13,6 +13,9 @@ export class FieldSketch extends SketchTemplate {
     blobs: BlobParticle[]
     colors: p5.Color[]
     gui: dat.GUI
+    graphics: p5.Graphics
+    millis: number
+    sampleRate: number
 
     settings: {
         trace: boolean,
@@ -21,6 +24,7 @@ export class FieldSketch extends SketchTemplate {
         curl: boolean
         epsilon: number
         strength: number
+        drawNoise: boolean
     }
 
     constructor(p: p5) {
@@ -29,6 +33,7 @@ export class FieldSketch extends SketchTemplate {
         this.settings = {
             trace: true,
             plotField: false,
+            drawNoise: true,
             nBlobs: 100,
             curl: true,
             epsilon: .0001,
@@ -42,6 +47,10 @@ export class FieldSketch extends SketchTemplate {
 
         this.field = new Field(this.p);
 
+        this.millis = this.p.millis();
+        this.graphics = this.p.createGraphics(0, 0);
+        this.sampleRate = 2;
+
         this.blobs = new Array<BlobParticle>();
         for (let index = 0; index < this.settings.nBlobs; index++) {
             this.addBlob();
@@ -49,7 +58,20 @@ export class FieldSketch extends SketchTemplate {
 
         this.initGUI();
 
+
+
     }
+
+    mousePressed(): void {
+        this.field.pressed()
+        this.sampleRate = .1
+    }
+
+    mouseReleased(): void {
+        this.field.released()
+        this.sampleRate = 2
+    }
+
 
     initGUI(): void {
         this.gui = new dat.GUI({ width: 350, closed: true });
@@ -57,6 +79,7 @@ export class FieldSketch extends SketchTemplate {
         this.gui.add(this.settings, 'nBlobs', 1, 500, 1).listen()
         this.gui.add(this.settings, 'curl').listen()
         this.gui.add(this.settings, 'plotField').listen()
+        this.gui.add(this.settings, 'drawNoise').listen()
         this.gui.add(this.settings, 'trace').listen()
 
     }
@@ -130,6 +153,51 @@ export class FieldSketch extends SketchTemplate {
 
         this.field.debugDraw();
         if (this.settings.plotField) this.plotField();
+
+        if (this.settings.drawNoise) {
+
+            const rt = this.p.millis() / 1000
+            const sampleSize = 20
+            const dotSize = ~~this.screenSize.x / 250
+
+            const w = (this.screenSize.x / sampleSize * dotSize) + dotSize
+            const h = (this.screenSize.y / sampleSize * dotSize) + dotSize
+            const offsetX = this.screenSize.x - w - 10
+            const offsetY = this.screenSize.y - h - 10
+
+            if (rt % this.sampleRate > this.sampleRate - .01) {
+                this.drawNoise(sampleSize, dotSize, this.p.createVector(w, h))
+            }
+
+            if (this.graphics.width === 0 && this.graphics.height === 0) this.drawNoise(sampleSize, dotSize, this.p.createVector(w, h))
+            this.p.image(this.graphics, offsetX, offsetY);
+
+        }
+    }
+
+    private drawNoise(sampleSize: number, dotSize: number, size: p5.Vector): void {
+
+        this.graphics = this.p.createGraphics(size.x + 3, size.y + 3);
+
+        for (let k = 0; k <= this.screenSize.x; k += sampleSize) {
+            for (let j = 0; j <= this.screenSize.y; j += sampleSize) {
+                const position = this.p.createVector(k, j)
+                const result = this.field.getResult(position).mag()
+
+                this.p.colorMode(this.p.RGB, 1)
+                let usedColor: p5.Color
+                usedColor = this.p.color(result, result, result, .8)
+
+                //draw
+                this.graphics.noStroke()
+                this.graphics.fill(usedColor)
+                this.graphics.rect(k / sampleSize * dotSize, j / sampleSize * dotSize, dotSize, dotSize)
+
+                this.p.colorMode(this.p.RGB, 255)
+
+            }
+        }
+
     }
 
     private plotField(): void {

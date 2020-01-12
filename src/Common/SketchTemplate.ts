@@ -10,11 +10,15 @@ export class SketchTemplate {
         // initEvents => https://p5js.org/reference/#group-Events
 
         this.p.mousePressed = (e: Event) => { this.mousePressed(e) }
+        this.p.mouseReleased = (e: Event) => { this.mouseReleased(e) }
+        this.p.mouseMoved = (e: Event) => { this.mouseMoved(e) }
         this.p.keyPressed = (...args) => { this.keyPressed(args) }
 
     }
 
     mousePressed(e: Event): void { }
+    mouseReleased(e: Event): void { }
+    mouseMoved(e: Event): void { }
     keyPressed(args: any): void { }
 
     destroy(): void { }

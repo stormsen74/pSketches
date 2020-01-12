@@ -45,11 +45,11 @@ export class PotentialFieldSketch extends SketchTemplate {
         const potentials = new Array<Potential>()
         potentials.push(q1, q2)
 
-        this.field = new PotentialField(this.p, potentials);
+        this.field = new PotentialField(this.p, potentials)
 
         this.blobs = new Array<BlobParticle>();
         for (let index = 0; index < this.settings.nBlobs; index++) {
-            this.addBlob();
+            this.addBlob()
         }
 
         this.initGUI();
@@ -57,7 +57,7 @@ export class PotentialFieldSketch extends SketchTemplate {
     }
 
     initGUI(): void {
-        this.gui = new dat.GUI({ width: 350, closed: true });
+        this.gui = new dat.GUI({ width: 350, closed: true })
         this.gui.add(this.settings, 'nBlobs', 1, 500, 1).listen()
         this.gui.add(this.settings, 'curl').listen()
         this.gui.add(this.settings, 'strength', 1, 1000, 1)
@@ -69,7 +69,7 @@ export class PotentialFieldSketch extends SketchTemplate {
     addBlob() {
         const x = this.p.random(0, this.p.windowWidth)
         const y = this.p.random(0, this.p.windowHeight)
-        const position = this.p.createVector(x, y);
+        const position = this.p.createVector(x, y)
 
         const blob = new BlobParticle(
             this.p,
@@ -129,14 +129,13 @@ export class PotentialFieldSketch extends SketchTemplate {
                 this.blobs.splice(i, 1);
                 this.addBlob();
             }
-            // if (blob.isDead()) this.respawn(blob);
+
         }
 
         if (this.blobs.length < this.settings.nBlobs) {
             this.addBlob()
-        } else {
-            // this.blobs.splice(0, 1)
         }
+
 
         this.field.debugDraw();
         if (this.settings.plotField) this.plotField();

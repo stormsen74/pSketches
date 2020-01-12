@@ -1,12 +1,49 @@
-import  p5 from 'p5';
+import p5 from 'p5';
 
 class Charge {
+    p: p5
     charge: number
     position: p5.Vector
+    radius: number
+    dragging: boolean
+    offset: p5.Vector
 
-    constructor(position: p5.Vector, a: number) {
-        this.position = position;
-        this.charge = a;
+    constructor(p: p5, position: p5.Vector, a: number) {
+        this.p = p
+        this.position = position
+        this.charge = a
+        this.radius = 100
+        this.dragging = false
+        this.offset = this.p.createVector()
+    }
+
+    pressed(): void {
+        const mouse = this.p.createVector(this.p.mouseX, this.p.mouseY)
+        if (mouse.x > this.position.x - this.radius && mouse.x < this.position.x + this.radius &&
+            mouse.y > this.position.y - this.radius && mouse.y < this.position.y + this.radius) {
+
+            this.dragging = true;
+            console.log('start drag', this.dragging)
+
+            // If so, keep track of relative location of click to corner of rectangle
+            this.offset.x = this.position.x - mouse.x;
+            this.offset.y = this.position.y - mouse.y;
+        }
+    }
+
+    release() {
+        this.dragging = false;
+        console.log('end drag', this.dragging)
+    }
+
+    update() {
+
+        if (this.dragging) {
+            const mouse = this.p.createVector(this.p.mouseX, this.p.mouseY)
+            this.position.x = mouse.x + this.offset.x;
+            this.position.y = mouse.y + this.offset.y;
+        }
+
     }
 }
 
@@ -20,17 +57,33 @@ export class Field {
     constructor(p: p5) {
         this.p = p;
 
-        const q1 = new Charge(this.p.createVector(100, 300), 1);
-        const q2 = new Charge(this.p.createVector(1000, 300), -1);
+        const q1 = new Charge(p, this.p.createVector(100, 300), 1);
+        const q2 = new Charge(p, this.p.createVector(1000, 300), -1);
 
         this.charges = new Array<Charge>()
         this.charges.push(q1, q2)
 
-
-
     }
 
+
+    pressed() {
+        this.charges.forEach((c: Charge) => {
+            c.pressed()
+        })
+    }
+
+    released() {
+        this.charges.forEach((c: Charge) => {
+            c.release()
+        })
+    }
+
+
     public debugDraw(): void {
+
+        this.charges.forEach((c: Charge) => {
+            c.update()
+        })
 
         const c: p5.Color = this.p.color('#ff0000')
         this.p.noStroke()

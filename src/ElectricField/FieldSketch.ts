@@ -182,17 +182,16 @@ export class FieldSketch extends SketchTemplate {
         for (let k = 0; k <= this.screenSize.x; k += sampleSize) {
             for (let j = 0; j <= this.screenSize.y; j += sampleSize) {
                 const position = this.p.createVector(k, j)
-                const result = this.field.getResult(position).mag()
+                const result = this.field.getResult(position).mag() * 1
                 const angle = this.field.getResult(position).copy().heading()
                 const mappedAngle = this.p.map(angle, -Math.PI, Math.PI, 0, 1)
 
-                // console.log(angle)
-                console.log(mappedAngle)
 
-                // this.p.colorMode(this.p.RGB, 1)
+                this.p.colorMode(this.p.RGB, 1)
+                let resColor = this.p.color(result, result, result, .9)
                 this.p.colorMode(this.p.HSL, 1)
-                let mapColor: p5.Color
-                mapColor = this.p.color(mappedAngle, result, result, .8)
+                let mapColor = this.p.color(mappedAngle, .6, .6, .8)
+                let compColor = this.p.lerpColor(resColor, mapColor, .5)
 
                 //draw
                 this.graphics.noStroke()

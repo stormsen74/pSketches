@@ -5,6 +5,7 @@ import { FieldSketch } from './ElectricField/FieldSketch';
 import { PotentialFieldSketch } from './PotentialField/PotentialFieldSketch';
 import { sketches, sketchData } from './sketches';
 import { CurlNoiseFieldSketch } from './CurlNoiseField/CurlNoiseFieldSketch';
+import { ParamFieldSketch } from './ParamField/ParamFieldSketch';
 
 interface SketchType {
     [key: string]: Array<any>;
@@ -15,7 +16,8 @@ enum types {
     'FlowStream' = 'FlowStream',
     'FieldSketch' = 'FieldSketch',
     'PotentialFieldSketch' = 'PotentialFieldSketch',
-    'CurlNoiseFieldSketch' = 'CurlNoiseFieldSketch'
+    'CurlNoiseFieldSketch' = 'CurlNoiseFieldSketch',
+    'ParamFieldSketch' = 'ParamFieldSketch'
 }
 
 const sketchTypes: SketchType = {
@@ -33,6 +35,9 @@ const sketchTypes: SketchType = {
     ],
     'CurlNoiseFieldSketch': [
         (p: p5): CurlNoiseFieldSketch => { return new CurlNoiseFieldSketch(p) }
+    ],
+    'ParamFieldSketch': [
+        (p: p5): ParamFieldSketch => { return new ParamFieldSketch(p) }
     ]
 }
 

@@ -31,5 +31,10 @@ export const sketches: Array<sketchData> = [
         key: 'CurlNoiseFieldSketch',
         name: 'Curl-Noise Field',
         description: ' ...'
+    },
+    {
+        key: 'ParamFieldSketch',
+        name: 'Para-Field Field',
+        description: ' ...'
     }
 ]

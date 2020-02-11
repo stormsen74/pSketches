@@ -13,6 +13,9 @@ export class PotentialFieldSketch extends SketchTemplate {
     blobs: BlobParticle[]
     colors: p5.Color[]
     gui: dat.GUI
+    graphics: p5.Graphics
+    millis: number
+    sampleRate: number
 
     settings: {
         trace: boolean
@@ -21,6 +24,7 @@ export class PotentialFieldSketch extends SketchTemplate {
         curl: boolean
         epsilon: number
         strength: number
+        drawNoise: boolean
     }
 
     constructor(p: p5) {
@@ -33,12 +37,17 @@ export class PotentialFieldSketch extends SketchTemplate {
             curl: true,
             epsilon: .0001,
             strength: 50,
+            drawNoise: false
         }
 
 
         this.colors = [this.p.color("#315F6B"), this.p.color("#347181"), this.p.color("#96A337"), this.p.color("#68A737"), this.p.color("#37AC39")]
 
         this.screenSize = new Point(this.p.windowWidth, this.p.windowHeight)
+
+        this.millis = this.p.millis();
+        this.graphics = this.p.createGraphics(0, 0);
+        this.sampleRate = 2;
 
         const q1 = new Potential(this.p.createVector(this.screenSize.x * .5, this.screenSize.y * .5), this.screenSize.y * .5, 1);
         const q2 = new Potential(this.p.createVector(800, 300), 300, -1);
@@ -62,6 +71,7 @@ export class PotentialFieldSketch extends SketchTemplate {
         this.gui.add(this.settings, 'curl').listen()
         this.gui.add(this.settings, 'strength', 1, 1000, 1)
         this.gui.add(this.settings, 'plotField').listen()
+        this.gui.add(this.settings, 'drawNoise').listen()
         this.gui.add(this.settings, 'trace').listen()
     }
 
@@ -139,6 +149,56 @@ export class PotentialFieldSketch extends SketchTemplate {
 
         this.field.debugDraw();
         if (this.settings.plotField) this.plotField();
+
+        if (this.settings.drawNoise) {
+
+            const rt = this.p.millis() / 1000
+            const sampleSize = 20
+            const dotSize = ~~this.screenSize.x / 250
+
+            const w = (this.screenSize.x / sampleSize * dotSize) + dotSize
+            const h = (this.screenSize.y / sampleSize * dotSize) + dotSize
+            const offsetX = this.screenSize.x - w - 10
+            const offsetY = this.screenSize.y - h - 10
+
+            if (rt % this.sampleRate > this.sampleRate - .01) {
+                this.drawNoise(sampleSize, dotSize, this.p.createVector(w, h))
+            }
+
+            if (this.graphics.width === 0 && this.graphics.height === 0) this.drawNoise(sampleSize, dotSize, this.p.createVector(w, h))
+            this.p.image(this.graphics, offsetX, offsetY);
+
+        }
+    }
+
+    private drawNoise(sampleSize: number, dotSize: number, size: p5.Vector): void {
+
+        this.graphics = this.p.createGraphics(size.x + 3, size.y + 3);
+
+        for (let k = 0; k <= this.screenSize.x; k += sampleSize) {
+            for (let j = 0; j <= this.screenSize.y; j += sampleSize) {
+                const position = this.p.createVector(k, j)
+                const result = this.field.getPotential(position).mag()*.3
+                const angle = this.field.getPotential(position).copy().heading()
+                const mappedAngle = this.p.map(angle, -Math.PI, Math.PI, 0, 1)
+
+
+                this.p.colorMode(this.p.RGB, 1)
+                let resColor = this.p.color(result, result, result, .9)
+                this.p.colorMode(this.p.HSL, 1)
+                let mapColor = this.p.color(mappedAngle, .6, .6, .8)
+                let compColor = this.p.lerpColor(resColor, mapColor, .5)
+
+                //draw
+                this.graphics.noStroke()
+                this.graphics.fill(resColor)
+                this.graphics.rect(k / sampleSize * dotSize, j / sampleSize * dotSize, dotSize, dotSize)
+
+                this.p.colorMode(this.p.RGB, 255)
+
+            }
+        }
+
     }
 
     private plotField(): void {

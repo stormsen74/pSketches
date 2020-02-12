@@ -10,20 +10,22 @@ import { SketchTemplate } from '../Common/SketchTemplate';
 
 export class ParamFieldSketch extends SketchTemplate {
     settings: {
-        maxBlobs: number,
-        trace: boolean,
-        plotField: boolean,
-        plotRes: number,
-        speedMultiplier: number,
-        fScale: number,
-        useRK4: boolean,
-        blobCount: number,
-        frameRate: number,
-        n: string,
-        ode: string,
-        fillColor: string,
+        maxBlobs: number
+        trace: boolean
+        plotField: boolean
+        plotRes: number
+        speedMultiplier: number
+        fScale: number
+        useRK4: boolean
+        blobCount: number
+        frameRate: number
+        n: string
+        fillColor: string
         fillOpacity: number
-        toggle: Function
+        a: number
+        b: number
+        c: number
+        d: number
     }
 
     gui: dat.GUI
@@ -47,13 +49,15 @@ export class ParamFieldSketch extends SketchTemplate {
             blobCount: 0,
             frameRate: 0,
             trace: true,
-            plotField: false,
+            plotField: true,
             plotRes: 75,
             n: 'positive',
-            ode: "y'=cos(xy)",
             fillColor: "#090715",
             fillOpacity: .03,
-            toggle: () => { }
+            a: 1,
+            b: -1,
+            c: 1,
+            d: 1,
         }
 
         // this.colors = [this.p.color("#7beddc"), this.p.color("#78d9fa"), this.p.color("#91a7ff"), this.p.color("#28fcd2"), this.p.color("#456ff7")]
@@ -149,6 +153,13 @@ export class ParamFieldSketch extends SketchTemplate {
             this.onChangeFill()
         })
 
+        const parameters = this.gui.addFolder('parameters');
+        parameters.open();
+        parameters.add(this.settings, 'a', -1, 1, .01).listen();
+        parameters.add(this.settings, 'b', -1, 1, .01).listen();
+        parameters.add(this.settings, 'c', -1, 1, .01).listen();
+        parameters.add(this.settings, 'd', -1, 1, .01).listen();
+
         const simulation = this.gui.addFolder('simulation');
         simulation.open();
         simulation.add(this.settings, 'plotField').onChange((show: boolean) => {
@@ -190,15 +201,11 @@ export class ParamFieldSketch extends SketchTemplate {
     // https://academo.org/demos/vector-field-plotter/
 
     getFieldX(x: number, y: number): number {
-        const a = 1
-        const b = -1
-        return a * x + b * y
+        return this.settings.a * x + this.settings.b * y
     }
 
     getFieldY(x: number, y: number): number {
-        const c = 1
-        const d = 1
-        return c * x + d * y
+        return this.settings.c * x + this.settings.d * y
     }
 
     rk4(stepsize: number, position: p5.Vector, dir: number) {
@@ -278,14 +285,14 @@ export class ParamFieldSketch extends SketchTemplate {
                 const solver = this.rk4(stepsize, sim_position, 1);
                 const vVel = this.p.createVector(solver.x, -solver.y)
                 let angle = vVel.heading();
-                let mag = vVel.mag();
-                this.p.fill(255, mag * 150);
-                this.p.noStroke();
+                let mag = vVel.mag() * 10;
                 this.p.push();
                 this.p.translate(position.x, position.y);
                 this.p.rotate(angle);
                 this.p.scale(.9);
-                this.p.triangle(-10, -3, 10, 0, -10, 3);
+                this.p.stroke(mag * 255);
+                this.p.strokeWeight(1)
+                this.p.line(-5, 0, 5, 0)
                 this.p.pop();
             }
         }

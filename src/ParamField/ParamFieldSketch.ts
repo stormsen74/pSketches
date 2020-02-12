@@ -18,7 +18,6 @@ export class ParamFieldSketch extends SketchTemplate {
         fScale: number
         useRK4: boolean
         blobCount: number
-        frameRate: number
         n: string
         fillColor: string
         fillOpacity: number
@@ -47,14 +46,13 @@ export class ParamFieldSketch extends SketchTemplate {
             speedMultiplier: .0002,
             useRK4: true,
             blobCount: 0,
-            frameRate: 0,
             trace: true,
             plotField: true,
             plotRes: 75,
             n: 'positive',
             fillColor: "#090715",
             fillOpacity: .03,
-            a: 1,
+            a: 0,
             b: -1,
             c: 1,
             d: 1,
@@ -181,8 +179,7 @@ export class ParamFieldSketch extends SketchTemplate {
         simulation.add(this.settings, 'speedMultiplier', .0, .003, .00001)
         simulation.add(this.settings, 'maxBlobs', 0, 750, 1).listen();
         simulation.add(this.settings, 'useRK4')
-        simulation.add(this.settings, 'blobCount').listen();
-        simulation.add(this.settings, 'frameRate', 0, 1, 0.01).listen().name('60fps');
+        // simulation.add(this.settings, 'blobCount').listen();
 
         this.gui.add(this.settings, 'n', ["positive", "negative", "pos/neg"]).name("direction")
 
@@ -272,8 +269,6 @@ export class ParamFieldSketch extends SketchTemplate {
 
         this.blobs.length > this.settings.maxBlobs ? this.blobs.splice(i, 1) : this.addBlob();
         this.settings.blobCount = this.blobs.length;
-        this.settings.frameRate = this.p.frameRate() / 60;
-
     }
 
     plotField(stepsize: number) {

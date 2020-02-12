@@ -78,7 +78,17 @@ const sketch = (p: p5): void => {
         // p.resizeCanvas(p.windowWidth, p.windowHeight);
     };
 
-    p.draw = (): void => { sketch.tick() };
+    p.draw = (): void => {
+        sketch.tick()
+        // console.log(p.frameRate() / 60)
+        const ts = p.frameRate() / 60;
+        p.noStroke()
+        p.colorMode(p.HSL, 1)
+        const barColor = p.color(ts/2, .5, .5, .9)
+        p.fill(barColor)
+        p.rect(130, 10, 80 * ts, 10)
+        p.colorMode(p.RGB, 255)
+    };
 };
 
 const toggleRun = (running: boolean) => {

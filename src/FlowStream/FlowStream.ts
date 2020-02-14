@@ -19,7 +19,6 @@ export class FlowStream extends SketchTemplate {
         fScale: number,
         useRK4: boolean,
         blobCount: number,
-        frameRate: number,
         n: string,
         ode: string,
         fillColor: string,
@@ -47,7 +46,6 @@ export class FlowStream extends SketchTemplate {
             speedMultiplier: .0002,
             useRK4: true,
             blobCount: 0,
-            frameRate: 0,
             trace: true,
             plotField: false,
             plotRes: 75,
@@ -175,7 +173,6 @@ export class FlowStream extends SketchTemplate {
         simulation.add(this.settings, 'maxBlobs', 0, 750, 1).listen();
         simulation.add(this.settings, 'useRK4')
         simulation.add(this.settings, 'blobCount').listen();
-        simulation.add(this.settings, 'frameRate', 0, 1, 0.01).listen().name('60fps');
 
         this.gui.add(this.settings, 'n', ["positive", "negative", "pos/neg"]).name("direction")
         this.gui.add(this.settings, 'ode', this.equations.getTypes()).name("Select:")
@@ -279,7 +276,6 @@ export class FlowStream extends SketchTemplate {
 
         this.blobs.length > this.settings.maxBlobs ? this.blobs.splice(i, 1) : this.addBlob();
         this.settings.blobCount = this.blobs.length;
-        this.settings.frameRate = this.p.frameRate() / 60;
 
     }
 

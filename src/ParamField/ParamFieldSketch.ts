@@ -16,7 +16,6 @@ export class ParamFieldSketch extends SketchTemplate {
         plotRes: number
         speedMultiplier: number
         fScale: number
-        useRK4: boolean
         blobCount: number
         n: string
         fillColor: string
@@ -44,7 +43,6 @@ export class ParamFieldSketch extends SketchTemplate {
             maxBlobs: 150,
             fScale: 20,
             speedMultiplier: .0002,
-            useRK4: true,
             blobCount: 0,
             trace: true,
             plotField: true,
@@ -178,7 +176,6 @@ export class ParamFieldSketch extends SketchTemplate {
         })
         simulation.add(this.settings, 'speedMultiplier', .0, .003, .00001)
         simulation.add(this.settings, 'maxBlobs', 0, 750, 1).listen();
-        simulation.add(this.settings, 'useRK4')
         // simulation.add(this.settings, 'blobCount').listen();
 
         this.gui.add(this.settings, 'n', ["positive", "negative", "pos/neg"]).name("direction")

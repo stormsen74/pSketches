@@ -84,6 +84,9 @@ const sketch = (p: p5): void => {
         const ts = p.frameRate() / 60;
         p.noStroke()
         p.colorMode(p.HSL, 1)
+        const bgColor = p.color(.0, .0, .2, .9)
+        p.fill(bgColor)
+        p.rect(130, 10, 100, 10)
         const barColor = p.color(ts/2, .5, .5, .9)
         p.fill(barColor)
         p.rect(130, 10, 80 * ts, 10)

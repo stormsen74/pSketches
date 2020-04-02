@@ -6,6 +6,8 @@ import { PotentialFieldSketch } from './PotentialField/PotentialFieldSketch';
 import { sketches, sketchData } from './sketches';
 import { CurlNoiseFieldSketch } from './CurlNoiseField/CurlNoiseFieldSketch';
 import { ParamFieldSketch } from './ParamField/ParamFieldSketch';
+import { isMobileDevice } from './Common/DeviceHelper';
+// import Route from 'route-parser';
 
 interface SketchType {
     [key: string]: Array<any>;
@@ -42,6 +44,7 @@ const sketchTypes: SketchType = {
 }
 
 
+
 const iconContainer = document.createElement("SECTION");
 const ui = document.createElement('div')
 const close = document.createElement('div')
@@ -49,7 +52,6 @@ const togglePlay = document.createElement('div')
 const screenshot = document.createElement('div')
 const fullscreen = document.createElement('div')
 const showUI: boolean = true;
-
 
 let sketchPlaying: boolean = true
 let sk: p5
@@ -73,23 +75,21 @@ const sketch = (p: p5): void => {
         sketchRef = sketch;
     };
 
-    // @todo
-    p.windowResized = (): void => {
-        // p.resizeCanvas(p.windowWidth, p.windowHeight);
-    };
 
     p.draw = (): void => {
         sketch.tick()
         // console.log(p.frameRate() / 60)
+        const yPosBar = isMobileDevice() ? p.windowHeight - 32 : 10;
+        const xPosBar = isMobileDevice() ? 220 : 130;
         const ts = p.frameRate() / 60;
         p.noStroke()
         p.colorMode(p.HSL, 1)
-        const bgColor = p.color(.0, .0, .2, .9)
+        const bgColor = p.color(.0, .0, .4, .9)
         p.fill(bgColor)
-        p.rect(130, 10, 100, 10)
-        const barColor = p.color(ts/2, .5, .5, .9)
+        p.rect(xPosBar, yPosBar, 100, 10)
+        const barColor = p.color(ts / 2, .5, .5, .9)
         p.fill(barColor)
-        p.rect(130, 10, 80 * ts, 10)
+        p.rect(xPosBar, yPosBar, 80 * ts, 10)
         p.colorMode(p.RGB, 255)
     };
 };
@@ -97,60 +97,82 @@ const sketch = (p: p5): void => {
 const toggleRun = (running: boolean) => {
     if (running) {
         iconContainer.style.display = 'none'
-        ui.style.top = '0px'
+        isMobileDevice() ? ui.style.display = 'block' : ui.style.top = '0px'
+        console.log('toggleRun', running, isMobileDevice())
     } else {
         iconContainer.style.display = 'flex'
-        ui.style.top = '-30px'
-        togglePlay.setAttribute('class', 'icon-pause')
+        isMobileDevice() ? ui.style.display = 'none' : ui.style.top = '-30px'
+        togglePlay.classList.remove('play-icon')
+        togglePlay.classList.add('pause-icon')
         sketchPlaying = true
     }
 }
 
 const createSketch = (type: string) => {
-    toggleRun(true)
     sketchType = type
+    // const route: string = '/' + sketchType;
+    // window.history.pushState("", "pSketches", route);
+    toggleRun(true)
     sk = new p5(sketch)
 }
 
 const clearSketch = () => {
+    // window.history.pushState("", "pSketches", '/');
     sketchRef.destroy();
     sk.remove();
     toggleRun(false)
 }
 
+// TOOD add hisory change event / set ui visibility on match ...
+// https://developer.mozilla.org/de/docs/Web/API/WindowEventHandlers/onpopstate
+// const route = new Route('http://localhost:1234/:sketchType')
+// console.log(window.location.href)
+// const match = route.match(window.location.href)
+// if (match) {
+//     console.log(match.sketchType)
+//     createSketch(match.sketchType)
+// } else {
+//     console.log('nope')
+// }
+
 
 const initUI = () => {
-
 
     iconContainer.setAttribute('class', 'sketchContainer');
     document.body.appendChild(iconContainer);
 
-    // => init ui
-
     ui.setAttribute('class', 'ui')
-    ui.style.top = '-30px'
+    if (isMobileDevice()) {
+        ui.style.display = 'none'
+        ui.style.bottom = '0'
+    } else {
+        ui.style.top = '-30px'
+    }
 
-    close.setAttribute('class', 'icon-close');
+    isMobileDevice() ? close.setAttribute('class', 'icon-close-mobile') : close.setAttribute('class', 'icon-close');
     close.addEventListener('click', clearSketch)
 
-    togglePlay.setAttribute('class', 'icon-pause');
+    isMobileDevice() ? togglePlay.setAttribute('class', 'icon-toggle-mobile') : togglePlay.setAttribute('class', 'icon-toggle');
+    togglePlay.classList.add('pause-icon')
     togglePlay.addEventListener('click', () => {
         sketchPlaying = !sketchPlaying;
         if (sketchPlaying) {
-            togglePlay.setAttribute('class', 'icon-pause')
+            togglePlay.classList.remove('play-icon')
+            togglePlay.classList.add('pause-icon')
             sk.loop()
         } else {
-            togglePlay.setAttribute('class', 'icon-play')
+            togglePlay.classList.remove('pause-icon')
+            togglePlay.classList.add('play-icon')
             sk.noLoop()
         }
     })
 
-    screenshot.setAttribute('class', 'icon-camera');
+    isMobileDevice() ? screenshot.setAttribute('class', 'icon-camera-mobile') : screenshot.setAttribute('class', 'icon-camera');
     screenshot.addEventListener('click', () => {
         sk.saveCanvas('sketch', 'png')
     })
 
-    fullscreen.setAttribute('class', 'icon-fullscreen');
+    isMobileDevice() ? fullscreen.setAttribute('class', 'icon-fullscreen-mobile') : fullscreen.setAttribute('class', 'icon-fullscreen');
     fullscreen.addEventListener('click', () => {
         if (sk === undefined) return
         const fs = sk.fullscreen();
@@ -177,4 +199,4 @@ const initUI = () => {
 
 }
 
-showUI ? initUI() : createSketch(types.CurlNoiseFieldSketch);
+showUI ? initUI() : createSketch(types.ParamFieldSketch);

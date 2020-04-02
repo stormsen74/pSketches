@@ -34,7 +34,7 @@ export const sketches: Array<sketchData> = [
     },
     {
         key: 'ParamFieldSketch',
-        name: 'Para-Field Field',
+        name: 'Param-Field',
         description: ' ...'
     }
 ]

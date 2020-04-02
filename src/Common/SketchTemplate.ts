@@ -13,6 +13,8 @@ export class SketchTemplate {
         this.p.mouseReleased = (e: Event) => { this.mouseReleased(e) }
         this.p.mouseMoved = (e: Event) => { this.mouseMoved(e) }
         this.p.keyPressed = (...args) => { this.keyPressed(args) }
+        this.p.windowResized = () => { this.onResize() }
+        this.p.deviceTurned = () => { this.onResize() }
 
     }
 
@@ -28,6 +30,7 @@ export class SketchTemplate {
         this.draw()
     }
 
+    onResize(): void {}
     update(): void { }
     draw(): void { }
 }

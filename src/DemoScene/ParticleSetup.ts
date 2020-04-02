@@ -20,6 +20,11 @@ export class ParticleSetup extends SketchTemplate {
         this.particles.push(p)
     }
 
+    onResize(): void {
+        this.p.clear()
+        this.p.resizeCanvas(this.p.windowWidth, this.p.windowHeight);
+    }
+
     draw() {
 
         for (let i = this.particles.length - 1; i >= 0; i--) {

@@ -22,7 +22,6 @@ body {
     align-items: flex-start;
     align-content: center;
     width: 100%;
-    /* background-color: #2f1d58; */
     height: 100vh;
     overflow: auto;
     flex-direction: row;
@@ -45,7 +44,6 @@ body {
 
 .ui {
     position: absolute;
-    top: 0px;
     z-index: 1;
     transition: all .3s ease-out;
 }
@@ -59,26 +57,41 @@ body {
     cursor: pointer;
 }
 
-.icon-pause {
+.icon-close-mobile {
+    position: absolute;
+    bottom: 15px;
+    left: 10px;
+    transform: scale(1.8);
+    width: 28px;
+    height: 28px;
+    background-image: url(icons/x.svg);
+}
+
+.icon-toggle {
     position: absolute;
     top: 0;
     left: 30px;
     width: 28px;
     height: 28px;
-    transform: scale(.9);
-    background-image: url(icons/pause-circle.svg);
+    transform: scale(1.0);
     cursor: pointer;
 }
 
-.icon-play {
+.icon-toggle-mobile {
     position: absolute;
-    top: 0;
-    left: 30px;
+    bottom: 15px;
+    left: 60px;
     width: 28px;
     height: 28px;
-    transform: scale(.9);
+    transform: scale(1.7);
+}
+
+.pause-icon {
+    background-image: url(icons/pause-circle.svg);
+}
+
+.play-icon {
     background-image: url(icons/play-circle.svg);
-    cursor: pointer;
 }
 
 .icon-camera {
@@ -92,6 +105,16 @@ body {
     cursor: pointer;
 }
 
+.icon-camera-mobile {
+    position: absolute;
+    bottom: 16px;
+    left: 118px;
+    width: 28px;
+    height: 28px;
+    transform: scale(1.6);
+    background-image: url(icons/camera.svg);
+}
+
 .icon-fullscreen {
     position: absolute;
     top: 0;
@@ -103,6 +126,16 @@ body {
     cursor: pointer;
 }
 
+.icon-fullscreen-mobile {
+    position: absolute;
+    bottom: 15px;
+    left: 172px;
+    width: 28px;
+    height: 28px;
+    transform: scale(1.5);
+    background-image: url(icons/maximize.svg);
+}
+
 .dg.ac {
     position: absolute;
     top: 0;
@@ -110,4 +143,5 @@ body {
     right: 0;
     height: 0;
     z-index: 1 !important;
+    transform-origin: 100% 0%;
 }

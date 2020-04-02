@@ -4,6 +4,7 @@ import { Point } from '../Common/Point';
 import { Field } from '../ElectricField/Field';
 import { BlobParticle } from '../Common/Blob';
 import { SketchTemplate } from '../Common/SketchTemplate';
+import { isMobileDevice } from '../Common/DeviceHelper';
 
 
 export class FieldSketch extends SketchTemplate {
@@ -57,9 +58,6 @@ export class FieldSketch extends SketchTemplate {
         }
 
         this.initGUI();
-
-
-
     }
 
     mousePressed(): void {
@@ -76,12 +74,17 @@ export class FieldSketch extends SketchTemplate {
     initGUI(): void {
         this.gui = new dat.GUI({ width: 350, closed: true });
 
+        if (isMobileDevice()) {
+            this.gui.width = 300;
+            const _dat: HTMLDivElement = document.querySelector(".dg.ac");
+            _dat.style.transform = 'scale(1.2)'
+        }
+
         this.gui.add(this.settings, 'nBlobs', 1, 500, 1).listen()
         this.gui.add(this.settings, 'curl').listen()
         this.gui.add(this.settings, 'plotField').listen()
         this.gui.add(this.settings, 'drawNoise').listen()
         this.gui.add(this.settings, 'trace').listen()
-
     }
 
 
@@ -227,6 +230,11 @@ export class FieldSketch extends SketchTemplate {
                 this.p.pop();
             }
         }
+    }
+
+    onResize() {
+        this.p.resizeCanvas(this.p.windowWidth, this.p.windowHeight);
+        this.screenSize = new Point(this.p.windowWidth, this.p.windowHeight)
     }
 
     destroy() {

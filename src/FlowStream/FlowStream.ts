@@ -4,6 +4,7 @@ import { BlobParticle } from '../Common/Blob';
 import { Point } from '../Common/Point';
 import { Equations } from './Equations';
 import { SketchTemplate } from '../Common/SketchTemplate';
+import { isMobileDevice } from '../Common/DeviceHelper';
 
 // @TODOS
 // white / dark -mode
@@ -146,6 +147,12 @@ export class FlowStream extends SketchTemplate {
 
         this.gui = new dat.GUI({ width: 350, closed: true });
 
+        if (isMobileDevice()) {
+            this.gui.width = 300;
+            const _dat: HTMLDivElement = document.querySelector(".dg.ac");
+            _dat.style.transform = 'scale(1.2)'
+        }
+
         this.gui.add(this.settings, 'trace').onChange((trace: boolean) => {
             this.settings.fillOpacity = trace ? .03 : .5;
             this.onChangeFill()
@@ -259,17 +266,11 @@ export class FlowStream extends SketchTemplate {
 
             blob.lastPosition = screenPosition;
 
-            // const border = 200;
-            // if (x < -border || y < -border || x > this.pSize.x + border || y > this.pSize.y + border || length > this.settings.maxParticles) {
-            //     this.blobs.splice(i, 1);
-            // }
-
             blob.update();
             if (blob.isDead()) {
                 this.blobs.splice(i, 1);
                 this.addBlob();
             }
-            // if (blob.isDead()) this.respawn(blob);
 
         }
 
@@ -299,6 +300,15 @@ export class FlowStream extends SketchTemplate {
                 this.p.pop();
             }
         }
+    }
+
+    onResize() {
+        this.p.resizeCanvas(this.p.windowWidth, this.p.windowHeight);
+        this.onChangeScale();
+        setTimeout(() => {
+            this.updateDraw = true;
+            this.fill.setAlpha(this.settings.fillOpacity * 255)
+        }, 100)
     }
 
     destroy() {

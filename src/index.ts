@@ -78,7 +78,6 @@ const sketch = (p: p5): void => {
 
     p.draw = (): void => {
         sketch.tick()
-        // console.log(p.frameRate() / 60)
         const yPosBar = isMobileDevice() ? p.windowHeight - 32 : 10;
         const xPosBar = isMobileDevice() ? 220 : 130;
         const ts = p.frameRate() / 60;
@@ -122,6 +121,8 @@ const clearSketch = () => {
     sk.remove();
     toggleRun(false)
 }
+
+// https://gist.github.com/cobyism/4730490
 
 // TOOD add hisory change event / set ui visibility on match ...
 // https://developer.mozilla.org/de/docs/Web/API/WindowEventHandlers/onpopstate

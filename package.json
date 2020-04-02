@@ -13,7 +13,7 @@
         "typescript",
         "parcel-bundler"
     ],
-    "homepage": "*",
+    "homepage": "https://stormsen74.github.io/pSketches/dist/",
     "repository": {
         "type": "git",
         "url": "https://github.com/stormsen74/pSketches.git"

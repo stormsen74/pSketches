@@ -1,4 +1,5 @@
 import p5 from 'p5';
+import { Point } from '../Common/Point';
 
 class Charge {
     p: p5
@@ -23,9 +24,7 @@ class Charge {
             mouse.y > this.position.y - this.radius && mouse.y < this.position.y + this.radius) {
 
             this.dragging = true;
-            console.log('start drag', this.dragging)
 
-            // If so, keep track of relative location of click to corner of rectangle
             this.offset.x = this.position.x - mouse.x;
             this.offset.y = this.position.y - mouse.y;
         }
@@ -57,8 +56,16 @@ export class Field {
     constructor(p: p5) {
         this.p = p;
 
-        const q1 = new Charge(p, this.p.createVector(100, 300), 1);
-        const q2 = new Charge(p, this.p.createVector(1000, 300), -1);
+        const getRandomX = () => {
+            return this.p.random(0, this.p.windowWidth);
+        }
+
+        const getRandomY = () => {
+            return this.p.random(0, this.p.windowHeight);
+        }
+
+        const q1 = new Charge(p, this.p.createVector(getRandomX(), getRandomY()), 1);
+        const q2 = new Charge(p, this.p.createVector(getRandomX(), getRandomY()), -1);
 
         this.charges = new Array<Charge>()
         this.charges.push(q1, q2)

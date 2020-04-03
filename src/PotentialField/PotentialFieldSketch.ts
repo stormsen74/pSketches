@@ -4,6 +4,7 @@ import { Point } from '../Common/Point';
 import { BlobParticle } from '../Common/Blob';
 import { Potential, PotentialField } from './PotentialField';
 import { SketchTemplate } from '../Common/SketchTemplate';
+import { isMobileDevice } from '../Common/DeviceHelper';
 
 
 export class PotentialFieldSketch extends SketchTemplate {
@@ -49,8 +50,9 @@ export class PotentialFieldSketch extends SketchTemplate {
         this.graphics = this.p.createGraphics(0, 0);
         this.sampleRate = 2;
 
-        const q1 = new Potential(this.p.createVector(this.screenSize.x * .5, this.screenSize.y * .5), this.screenSize.y * .5, 1);
-        const q2 = new Potential(this.p.createVector(800, 300), 300, -1);
+        const center = new Point(this.screenSize.x * .5, this.screenSize.y * .5)
+        const q1 = new Potential(this.p.createVector(center.x, center.y), this.screenSize.y * .5, 1);
+        const q2 = new Potential(this.p.createVector(center.x - 100, center.y - 100), 300, -1);
         const potentials = new Array<Potential>()
         potentials.push(q1, q2)
 
@@ -67,6 +69,13 @@ export class PotentialFieldSketch extends SketchTemplate {
 
     initGUI(): void {
         this.gui = new dat.GUI({ width: 350, closed: true })
+
+        if (isMobileDevice()) {
+            this.gui.width = 300;
+            const _dat: HTMLDivElement = document.querySelector(".dg.ac");
+            _dat.style.transform = 'scale(1.2)'
+        }
+
         this.gui.add(this.settings, 'nBlobs', 1, 500, 1).listen()
         this.gui.add(this.settings, 'curl').listen()
         this.gui.add(this.settings, 'strength', 1, 1000, 1)
@@ -178,7 +187,7 @@ export class PotentialFieldSketch extends SketchTemplate {
         for (let k = 0; k <= this.screenSize.x; k += sampleSize) {
             for (let j = 0; j <= this.screenSize.y; j += sampleSize) {
                 const position = this.p.createVector(k, j)
-                const result = this.field.getPotential(position).mag()*.3
+                const result = this.field.getPotential(position).mag() * .3
                 const angle = this.field.getPotential(position).copy().heading()
                 const mappedAngle = this.p.map(angle, -Math.PI, Math.PI, 0, 1)
 
@@ -223,6 +232,11 @@ export class PotentialFieldSketch extends SketchTemplate {
                 this.p.pop();
             }
         }
+    }
+
+    onResize() {
+        this.p.resizeCanvas(this.p.windowWidth, this.p.windowHeight);
+        this.screenSize = new Point(this.p.windowWidth, this.p.windowHeight)
     }
 
     destroy() {

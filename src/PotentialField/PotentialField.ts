@@ -40,19 +40,20 @@ export class PotentialField {
 
         // this.potentials[0].position.add(this.p.createVector(.1, 0))
 
-        // const c: p5.Color = this.p.color('#ff0000')
+        const strokeColor: p5.Color = this.p.color('#ff0000')
+        strokeColor.setAlpha(10)
         // this.p.noStroke()
         // c.setAlpha(.5 * 255)
         // this.p.stroke(200).strokeWeight(1)
 
-        this.p.noFill()
-        const strokeColor = this.p.color(50, 10)
+        // this.p.noFill()
+        // const strokeColor = this.p.color(50, 10)
 
         for (let index = 0; index < this.potentials.length; index++) {
             const p = this.potentials[index];
 
             // this.p.fill(this.p.color(p.charge > 0 ? 'rgba(0,0,255,.15)' : 'rgba(255,0,0,.15)'))
-            this.p.stroke(strokeColor).strokeWeight(1)
+            this.p.stroke(strokeColor).strokeWeight(2)
             this.p.ellipse(p.position.x, p.position.y, p.radius * 2, p.radius * 2)
         }
     }

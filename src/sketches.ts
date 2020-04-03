@@ -9,7 +9,7 @@ export interface sketchData {
 export const sketches: Array<sketchData> = [
     {
         key: 'ParticleSetup',
-        name: 'Particle Setup',
+        name: 'Particle Setup*',
         description: ' ...'
     },
     {

@@ -22,6 +22,6 @@ typings/
 
 # Parcel directories
 .cache/
-dist/
+#dist/
 /.vscode
 /package-lock.json

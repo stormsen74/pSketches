@@ -1,8 +1,8 @@
 import p5 from 'p5';
 import dat from 'dat.gui';
-import { BlobParticle } from '../Common/Blob';
-import { Point } from '../Common/Point';
-import { SketchTemplate } from '../Common/SketchTemplate';
+import {BlobParticle} from '../Common/Blob';
+import {Point} from '../Common/Point';
+import {SketchTemplate} from '../Common/SketchTemplate';
 
 // @TODOS
 // white / dark -mode
@@ -59,7 +59,6 @@ export class ParamFieldSketch extends SketchTemplate {
         // this.colors = [this.p.color("#7beddc"), this.p.color("#78d9fa"), this.p.color("#91a7ff"), this.p.color("#28fcd2"), this.p.color("#456ff7")]
         this.colors = [this.p.color("#315F6B"), this.p.color("#347181"), this.p.color("#96A337"), this.p.color("#68A737"), this.p.color("#37AC39")]
         // this.colors = [this.p.color("#090a0b"), this.p.color("#171718"), this.p.color("#232022"), this.p.color("#2f2b2a"), this.p.color("#393633")]
-
 
 
         this.blobs = new Array<BlobParticle>();
@@ -142,7 +141,7 @@ export class ParamFieldSketch extends SketchTemplate {
 
     initGUI(): void {
 
-        this.gui = new dat.GUI({ width: 350, closed: true });
+        this.gui = new dat.GUI({width: 350, closed: true});
 
         this.gui.add(this.settings, 'trace').onChange((trace: boolean) => {
             this.settings.fillOpacity = trace ? .03 : .5;

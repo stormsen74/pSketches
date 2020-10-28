@@ -1,0 +1,149 @@
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(22, 22, 21);
+}
+
+.p5Canvas {
+    position: absolute;
+    z-index: 0;
+}
+
+
+/* styles.css */
+
+.sketchContainer {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+    flex-direction: row;
+}
+
+.sketchContainer div {
+    font-family: monospace;
+    user-select: none;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    border-radius: 3%;
+    margin: 15px;
+    padding: 10px;
+    color: rgb(233, 228, 221);
+    border: 1px solid blanchedalmond;
+    background-color: rgba(41, 66, 74, .7);
+    /* transition: all 1s ease-in-out; */
+}
+
+.ui {
+    position: absolute;
+    z-index: 1;
+    transition: all .3s ease-out;
+}
+
+.icon-close {
+    position: absolute;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    background-image: url(/x.e29ad790.svg);
+    cursor: pointer;
+}
+
+.icon-close-mobile {
+    position: absolute;
+    bottom: 15px;
+    left: 10px;
+    transform: scale(1.8);
+    width: 28px;
+    height: 28px;
+    background-image: url(/x.e29ad790.svg);
+}
+
+.icon-toggle {
+    position: absolute;
+    top: 0;
+    left: 30px;
+    width: 28px;
+    height: 28px;
+    transform: scale(1.0);
+    cursor: pointer;
+}
+
+.icon-toggle-mobile {
+    position: absolute;
+    bottom: 15px;
+    left: 60px;
+    width: 28px;
+    height: 28px;
+    transform: scale(1.7);
+}
+
+.pause-icon {
+    background-image: url(/pause-circle.71ccc5ee.svg);
+}
+
+.play-icon {
+    background-image: url(/play-circle.423292c4.svg);
+}
+
+.icon-camera {
+    position: absolute;
+    top: 0;
+    left: 63px;
+    width: 28px;
+    height: 28px;
+    transform: scale(.9);
+    background-image: url(/camera.ec30f93d.svg);
+    cursor: pointer;
+}
+
+.icon-camera-mobile {
+    position: absolute;
+    bottom: 16px;
+    left: 118px;
+    width: 28px;
+    height: 28px;
+    transform: scale(1.6);
+    background-image: url(/camera.ec30f93d.svg);
+}
+
+.icon-fullscreen {
+    position: absolute;
+    top: 0;
+    left: 96px;
+    width: 28px;
+    height: 28px;
+    transform: scale(.8);
+    background-image: url(/maximize.4d0b332b.svg);
+    cursor: pointer;
+}
+
+.icon-fullscreen-mobile {
+    position: absolute;
+    bottom: 15px;
+    left: 172px;
+    width: 28px;
+    height: 28px;
+    transform: scale(1.5);
+    background-image: url(/maximize.4d0b332b.svg);
+}
+
+.dg.ac {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    z-index: 1 !important;
+    transform-origin: 100% 0%;
+}
+
+/*# sourceMappingURL=/styles.dd855970.css.map */

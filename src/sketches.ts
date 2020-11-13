@@ -33,6 +33,11 @@ export const sketches: Array<sketchData> = [
         description: ' ...'
     },
     {
+        key: 'ImageBasedFieldSketch',
+        name: 'image based Field ...',
+        description: '/'
+    },
+    {
         key: 'ParamFieldSketch',
         name: 'Param-Field',
         description: ' ...'

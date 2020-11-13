@@ -1,12 +1,14 @@
 import p5 from 'p5';
-import { ParticleSetup } from './DemoScene/ParticleSetup';
-import { FlowStream } from './FlowStream/FlowStream';
-import { FieldSketch } from './ElectricField/FieldSketch';
-import { PotentialFieldSketch } from './PotentialField/PotentialFieldSketch';
-import { sketches, sketchData } from './sketches';
-import { CurlNoiseFieldSketch } from './CurlNoiseField/CurlNoiseFieldSketch';
-import { ParamFieldSketch } from './ParamField/ParamFieldSketch';
-import { isMobileDevice } from './Common/DeviceHelper';
+import {ParticleSetup} from './DemoScene/ParticleSetup';
+import {FlowStream} from './FlowStream/FlowStream';
+import {FieldSketch} from './ElectricField/FieldSketch';
+import {PotentialFieldSketch} from './PotentialField/PotentialFieldSketch';
+import {sketches, sketchData} from './sketches';
+import {CurlNoiseFieldSketch} from './CurlNoiseField/CurlNoiseFieldSketch';
+import {ParamFieldSketch} from './ParamField/ParamFieldSketch';
+import {isMobileDevice} from './Common/DeviceHelper';
+import {ImageBasedFieldSketch} from "./ImageBasedField/ImageBasedFieldSketch";
+
 // import Route from 'route-parser';
 
 interface SketchType {
@@ -19,30 +21,47 @@ enum types {
     'FieldSketch' = 'FieldSketch',
     'PotentialFieldSketch' = 'PotentialFieldSketch',
     'CurlNoiseFieldSketch' = 'CurlNoiseFieldSketch',
+    'ImageBasedFieldSketch' = 'ImageBasedFieldSketch',
     'ParamFieldSketch' = 'ParamFieldSketch'
 }
 
 const sketchTypes: SketchType = {
     'ParticleSetup': [
-        (p: p5): ParticleSetup => { return new ParticleSetup(p) }
+        (p: p5): ParticleSetup => {
+            return new ParticleSetup(p)
+        }
     ],
     'FlowStream': [
-        (p: p5): FlowStream => { return new FlowStream(p) }
+        (p: p5): FlowStream => {
+            return new FlowStream(p)
+        }
     ],
     'FieldSketch': [
-        (p: p5): FieldSketch => { return new FieldSketch(p) }
+        (p: p5): FieldSketch => {
+            return new FieldSketch(p)
+        }
     ],
     'PotentialFieldSketch': [
-        (p: p5): PotentialFieldSketch => { return new PotentialFieldSketch(p) }
+        (p: p5): PotentialFieldSketch => {
+            return new PotentialFieldSketch(p)
+        }
     ],
     'CurlNoiseFieldSketch': [
-        (p: p5): CurlNoiseFieldSketch => { return new CurlNoiseFieldSketch(p) }
+        (p: p5): CurlNoiseFieldSketch => {
+            return new CurlNoiseFieldSketch(p)
+        }
+    ],
+    'ImageBasedFieldSketch': [
+        (p: p5): ImageBasedFieldSketch => {
+            return new ImageBasedFieldSketch(p)
+        }
     ],
     'ParamFieldSketch': [
-        (p: p5): ParamFieldSketch => { return new ParamFieldSketch(p) }
+        (p: p5): ParamFieldSketch => {
+            return new ParamFieldSketch(p)
+        }
     ]
 }
-
 
 
 const iconContainer = document.createElement("SECTION");
@@ -65,14 +84,17 @@ const getSketch = (p: p5) => {
 const sketch = (p: p5): void => {
     let sketch: any;
 
-    p.preload = (): void => { };
+    sketch = getSketch(p);
+    sketchRef = sketch;
+
+    p.preload = (): void => {
+        sketch.preload()
+    };
 
     p.setup = (): void => {
         p.createCanvas(p.windowWidth, p.windowHeight, p.P2D);
         p.frameRate(60)
-
-        sketch = getSketch(p);
-        sketchRef = sketch;
+        sketch.setup()
     };
 
 

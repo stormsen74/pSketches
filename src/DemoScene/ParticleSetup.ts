@@ -1,6 +1,6 @@
 import p5 from 'p5';
-import { Particle } from './Particle'
-import { SketchTemplate } from '../Common/SketchTemplate'
+import {Particle} from './Particle'
+import {SketchTemplate} from '../Common/SketchTemplate'
 
 export class ParticleSetup extends SketchTemplate {
     particles: Particle[];
@@ -9,6 +9,10 @@ export class ParticleSetup extends SketchTemplate {
         super(p);
 
         this.particles = [];
+    }
+
+
+    setup(): void {
     }
 
     mousePressed(): void {
